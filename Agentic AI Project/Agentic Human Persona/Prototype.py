@@ -7,18 +7,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Initialize Model (Menggunakan Llama 4 Scout via Groq)
 llm = ChatGroq(model="meta-llama/llama-4-scout-17b-16e-instruct")
 
-# 1. Define State
+
 class AgentState(TypedDict):
-    messages: Annotated[Sequence[BaseMessage], add] # Menggunakan BaseMessage agar kompatibel dengan model.invoke
+    messages: Annotated[Sequence[BaseMessage], add] 
     user_emotion: str                        
     persona_profile: dict                    
     draft_response: str                      
     final_response: str                      
 
-# 2. Define Nodes dengan LLM Invoke
 def analyze_emotion_node(state: AgentState):
     """Menganalisis emosi user dari pesan terakhir."""
     last_message = state["messages"][-1].content
@@ -30,7 +28,6 @@ Pesan: '{last_message}'
 Label Emosi:"""
     
     response = llm.invoke(prompt)
-    # Ambil konten teks bersih dari response
     emotion = response.content.strip()
     
     return {"user_emotion": emotion}
@@ -47,8 +44,7 @@ def generate_response_node(state: AgentState):
 
 Kondisi psikologis user saat ini sedang: {emotion}. 
 Tanggapi pesan user dengan empati yang sangat sesuai dengan persona kamu. Jangan sebutkan label emosi secara eksplisit dalam obrolan."""
-    
-    # Gabungkan SystemMessage dengan history chat (messages)
+
     full_messages = [SystemMessage(content=system_prompt)] + list(messages)
     
     response = llm.invoke(full_messages)
@@ -72,24 +68,19 @@ Hasil Polish/Refine (Hanya keluarkan teks chat akhirnya saja):"""
     
     return {"final_response": response.content}
 
-# 3. Build Graph
 workflow = StateGraph(AgentState)
 
-# Add Nodes
 workflow.add_node("analyze_emotion", analyze_emotion_node)
 workflow.add_node("generate_response", generate_response_node)
 workflow.add_node("refine_voice", refine_voice_node)
 
-# Set Entry Point & Edges
 workflow.set_entry_point("analyze_emotion")
 workflow.add_edge("analyze_emotion", "generate_response")
 workflow.add_edge("generate_response", "refine_voice")
 workflow.add_edge("refine_voice", END)
 
-# Compile Graph
 app = workflow.compile()
 
-# 4. Run & Test Prototype
 initial_input = {
     "messages": [HumanMessage(content="Gak ngerti lagi deh, ini sistemnya error terus dari tadi pagi!")],
     "persona_profile": {

@@ -23,13 +23,13 @@ def get_chat_history(user_id: str, limit: int = 5):
         
         langchain_messages = []
         
-        # Urutkan dari yang paling lama ke yang terbaru
+        
         records = reversed(response.data)
         
         for record in records:
             full_text = record["message"]
             
-            # Parsing sederhana berdasarkan format penulisan Anda
+            
             if " Jawaban :" in full_text:
                 parts = full_text.split(" Jawaban :", 1)
                 user_part = parts[0].replace("Pertanyaan :", "").strip()
@@ -46,7 +46,7 @@ def get_chat_history(user_id: str, limit: int = 5):
 def save_chat_history(user_id: str, user_text: str, ai_reply: str):
     """Menyimpan input user dan output bot ke kolom message."""
     try:
-        # Menjaga format string yang sama seperti di screenshot Anda
+        
         formatted_message = f"Pertanyaan :{user_text} Jawaban :{ai_reply}"
         
         data = {

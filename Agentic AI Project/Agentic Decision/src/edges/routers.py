@@ -4,7 +4,6 @@ from langchain_mistralai import ChatMistralAI
 from src.state import DecisionState
 from src.prompts.promptAI import system_prompt_classification, system_prompt_router_2
 
-# Gunakan model cepat untuk klasifikasi input awal
 llm_fast = ChatMistralAI(model="mistral-small-2506")
 
 def input_classifier_router(state: DecisionState) -> str:

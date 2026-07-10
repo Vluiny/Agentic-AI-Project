@@ -66,7 +66,7 @@ Format Output Telegram yang Wajib Anda Ikuti (Salin Struktur Ini):
 
 *ANALISIS KEPUTUSAN GENERATOR*
 
-⚖️ *Dilema Utama Anda:*
+ *Dilema Utama Anda:*
 [1 kalimat analisis tajam tentang inti konflik terbesar pengguna]
 
 *Pemetaan 5 Sudut Pandang:*
